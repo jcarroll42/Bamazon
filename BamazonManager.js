@@ -15,39 +15,45 @@ connection.connect(function(err){
 });
 
 //initiate prompt. NOTE: Had to include the confirm because inquirer is buggy in Windows if list is the first type.
-inquirer.prompt([
-	{
-		type: "confirm",
-		message: "Use manager console?",
-		name: "confirm",
-		default: true
-	},
-	{
-		type: "list",
-		message: "Options:",
-		choices: ["1) View products for sale", "2) View low inventory", "3) Add to inventory", "4) Add new product"],
-		name: "selectedOption"
-	}
-]).then(function(action){
-	console.log(action.selectedOption);
+function prompting(){
+	inquirer.prompt([
+		{
+			type: "confirm",
+			message: "Use manager console?",
+			name: "confirm",
+			default: true
+		},
+		{
+			type: "list",
+			message: "Options:",
+			choices: ["1) View products for sale", "2) View low inventory", "3) Add to inventory", "4) Add new product", "5) Quit"],
+			name: "selectedOption"
+		}
+	]).then(function(action){
 
-	switch(action.selectedOption){
-		case "1) View products for sale":
-		viewAll();
-		break;
-		case "2) View low inventory":
-		viewLowStock();
-		break;
-		case "3) Add to inventory":
-		addQuantity();
-		break;
-		case "4) Add new product":
-		addProduct();
-		break;
-		default:
-		console.log("Bad input");
-	}
-});
+
+		switch(action.selectedOption){
+			case "1) View products for sale":
+				viewAll();
+				break;
+			case "2) View low inventory":
+				viewLowStock();
+				break;
+			case "3) Add to inventory":
+				addQuantity();
+				break;
+			case "4) Add new product":
+				addProduct();
+				break;
+			case "5) Quit":
+				connection.end()
+				return;
+			default:
+				console.log("Bad input");
+				prompting();
+		}
+	});
+}
 
 function viewAll(){
 	connection.query('SELECT * FROM products',
@@ -65,6 +71,8 @@ function viewAll(){
 			t.newRow();
 		});
 		console.log(t.toString());
+
+		prompting();
 	});
 }
 
@@ -83,6 +91,7 @@ function viewLowStock(){
 				t.newRow();
 			});
 			console.log(t.toString());
+			prompting();
 		}
 	)
 }
@@ -103,6 +112,7 @@ function addQuantity(){
 		var newQuantity = parseInt(item.quantity);
 		connection.query('UPDATE products SET StockQuantity = StockQuantity +' + newQuantity +' WHERE ?', {id: item.id}, function(err, result){
 			console.log('Update complete');
+			prompting();
 		});
 	});
 }
@@ -134,6 +144,9 @@ function addProduct(){
 		var quantity = parseInt(item.quantity);
 		connection.query('INSERT INTO products SET ?', {ProductName: item.name, DepartmentName: item.department, Price: item.price, StockQuantity: item.quantity}, function(err, res){
 			console.log("Item added.");
+			prompting();
 		});
 	});
 }
+
+prompting();

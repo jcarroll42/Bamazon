@@ -29,7 +29,6 @@ function prompting(){
 			quantity = parseInt(quantInput);
 			//queries to grab quantity
 			connection.query('SELECT id, Price, StockQuantity FROM products WHERE ?', {id: orderID}, function(err, orderQuery){
-		 		console.log(orderQuery[0].StockQuantity);
 		 		//check quantity
 		 		if (quantity > orderQuery[0].StockQuantity){
 		 			console.log("Insufficient quantity.");
