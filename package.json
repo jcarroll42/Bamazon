@@ -1,0 +1,25 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "Order taking service",
+  "main": "BamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcarroll42/Bamazon.git"
+  },
+  "author": "Josh Carroll",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jcarroll42/Bamazon/issues"
+  },
+  "homepage": "https://github.com/jcarroll42/Bamazon#readme",
+  "dependencies": {
+    "easy-table": "^1.0.0",
+    "inquirer": "^1.1.2",
+    "mysql": "^2.11.1",
+    "promptly": "^2.0.0"
+  }
+}
